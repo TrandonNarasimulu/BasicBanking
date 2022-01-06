@@ -4,8 +4,8 @@ using System.Text;
 
 namespace BasicBanking.Application.Common.Interfaces
 {
-    public interface IDummyService
+    public interface IDateTime
     {
-        string GetText();
+        DateTime Now { get; }
     }
 }

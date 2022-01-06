@@ -6,7 +6,8 @@ namespace BasicBanking.Application.Banking.Commands.CreateAccount
     {
         public CreateAccountCommandValidator()
         {
-            // RuleFor(x => x.).NotEmpty();
+            RuleFor(x => x.AccountHolderName).NotEmpty();
+            RuleFor(x => x.InitialDeposit).NotEmpty().Must(x => x > 0);
         }
     }
 }

@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Server.HttpSys;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
@@ -12,7 +11,7 @@ namespace BasicBanking.API
         public async static Task Main(string[] args)
         {
             string date = DateTime.Now.ToString("yyyyMMdd_hhmmss");
-            string filepath = "C:\\Logs\\Service_" + date + ".txt";
+            string filepath = "C:\\Logs\\BasicBankingService_" + date + ".txt";
             Log.Logger = new LoggerConfiguration()
                    .Enrich.FromLogContext()
                    .WriteTo.Console()
@@ -42,11 +41,6 @@ namespace BasicBanking.API
                 .UseWindowsService()
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseHttpSys(options =>
-                    {
-                        options.Authentication.Schemes = AuthenticationSchemes.None;
-                    });
-
                     webBuilder.ConfigureKestrel(serverOptions =>
                     {
                         serverOptions.Limits.MaxConcurrentConnections = null;

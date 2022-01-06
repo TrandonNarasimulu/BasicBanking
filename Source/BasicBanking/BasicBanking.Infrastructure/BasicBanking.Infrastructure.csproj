@@ -5,6 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="3.1.22" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BasicBanking.Domain\BasicBanking.Domain.csproj" />
     <ProjectReference Include="..\BasicBanking.Application\BasicBanking.Application.csproj" />
   </ItemGroup>
 

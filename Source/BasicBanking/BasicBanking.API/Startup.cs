@@ -1,6 +1,7 @@
 using BasicBanking.API.Filters;
 using BasicBanking.Application;
 using BasicBanking.Infrastructure;
+using BasicBanking.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -14,12 +15,12 @@ namespace BasicBanking.API
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
+            _configuration = configuration;
         }
 
-        public IConfiguration Configuration { get; }
+        private readonly IConfiguration _configuration;
 
-        public static void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                         builder =>
@@ -32,7 +33,7 @@ namespace BasicBanking.API
             services.AddControllers();
 
             services.AddApplication();
-            services.AddInfrastructure();
+            services.AddInfrastructure(_configuration);
 
             services.AddSwaggerDocument();
         }
@@ -48,8 +49,6 @@ namespace BasicBanking.API
                 app.UseHsts();
             }
 
-            //app.UseHttpsRedirection();
-
             app.UseOpenApi();
             app.UseSwaggerUi3(settings =>
             {
@@ -59,6 +58,9 @@ namespace BasicBanking.API
             app.UseCors("CorsPolicy");
             app.UseRouting();
             app.UseAuthorization();
+
+            var context = app.ApplicationServices.GetRequiredService<BasicBankingDbContext>();
+            BasicBankingDbContextSeedData.SeedSampleDataAsync(context);
 
             app.UseEndpoints(endpoints =>
             {
