@@ -1,5 +1,6 @@
 ﻿using BasicBanking.Application.Common.Interfaces;
 using BasicBanking.Domain.Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -17,6 +18,19 @@ namespace BasicBanking.Infrastructure.Services
             _context = context;
         }
 
+        public async Task CreateUser(string firstName, string lastName, CancellationToken cancellationToken)
+        {
+            var user = new User
+            {
+                FirstName = firstName,
+                LastName = lastName,
+            };
+
+            _context.Users.Add(user);
+
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
         public async Task CreateAccount(string accountNumber, User user, double initialDeposit, CancellationToken cancellationToken)
         {
             var bankAccount = new BankAccount
@@ -32,9 +46,18 @@ namespace BasicBanking.Infrastructure.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public bool TransferMoney()
+        public async Task TransferMoney(string srcAccount, string destAccount, double amount, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            var srcBankAccount = await _context.BankAccounts.SingleOrDefaultAsync(x => x.AccountNumber == srcAccount);
+            var destBankAccount = await _context.BankAccounts.SingleOrDefaultAsync(x => x.AccountNumber == destAccount);
+
+            srcBankAccount.Balance -= amount;
+            destBankAccount.Balance += amount;
+
+            _context.BankAccounts.Update(srcBankAccount);
+            _context.BankAccounts.Update(destBankAccount);
+
+            await _context.SaveChangesAsync(cancellationToken);
         }
     }
 }

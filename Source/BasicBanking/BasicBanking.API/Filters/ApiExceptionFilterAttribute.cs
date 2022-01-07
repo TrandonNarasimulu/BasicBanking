@@ -16,7 +16,8 @@ namespace BasicBanking.API.Filters
             _exceptionHandlers = new Dictionary<Type, Action<ExceptionContext>>
             {
                 { typeof(ValidationException), HandleValidationException },
-                { typeof(NotFoundException), HandleNotFoundException }
+                { typeof(NotFoundException), HandleNotFoundException },
+                { typeof(InsufficientFundsException), HandleInsufficientFundsException}
             };
         }
 
@@ -82,6 +83,21 @@ namespace BasicBanking.API.Filters
             };
 
             context.Result = new NotFoundObjectResult(details);
+
+            context.ExceptionHandled = true;
+        }
+
+        private void HandleInsufficientFundsException(ExceptionContext context)
+        {
+            var exception = context.Exception as InsufficientFundsException;
+
+            var details = new ProblemDetails()
+            {
+                Type = "https://tools.ietf.org/html/rfc7231#section-6.5.1",
+                Detail = exception.Message
+            };
+
+            context.Result = new BadRequestObjectResult(details);
 
             context.ExceptionHandled = true;
         }

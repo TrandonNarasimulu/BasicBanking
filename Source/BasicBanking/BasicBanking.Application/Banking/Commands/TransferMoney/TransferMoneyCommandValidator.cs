@@ -6,7 +6,9 @@ namespace BasicBanking.Application.Banking.Commands.TransferMoney
     {
         public TransferMoneyCommandValidator()
         {
-            // RuleFor(x => x.).NotEmpty();
+            RuleFor(x => x.SourceAccountNumber).NotEmpty();
+            RuleFor(x => x.DestinationAccountNumber).NotEmpty();
+            RuleFor(x => x.Amount).NotEmpty().Must(x => x > 0);
         }
     }
 }

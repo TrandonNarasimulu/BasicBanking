@@ -10,42 +10,46 @@ using System.Threading.Tasks;
 
 namespace BasicBanking.Application.Banking.Commands.CreateAccount
 {
-    public class CreateAccountCommand : IRequest
+    public class CreateAccountCommand : IRequest<CreateAccountViewModel>
     {
-        public string AccountHolderName { get; set; }
-        public string AccountHolderSurname { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
         public double InitialDeposit { get; set; }
     }
 
-    public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, Unit>
+    public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, CreateAccountViewModel>
     {
         private readonly IBanking _bankingService;
         private readonly IBasicBankingDbContext _context;
         private readonly IMath _mathService;
-        private ILogger<CreateAccountCommandHandler> _logger;
 
-        public CreateAccountCommandHandler(IBanking bankingService, IBasicBankingDbContext context, IMath mathService, ILogger<CreateAccountCommandHandler> logger)
+        public CreateAccountCommandHandler(IBanking bankingService, IBasicBankingDbContext context, IMath mathService)
         {
             _bankingService = bankingService;
             _context = context;
             _mathService = mathService;
-            _logger = logger;
         }
 
-        public async Task<Unit> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
+        public async Task<CreateAccountViewModel> Handle(CreateAccountCommand request, CancellationToken cancellationToken)
         {
             var accountNumber = await GenerateAccountNumber();
 
-            var userEntity = await _context.Users.SingleOrDefaultAsync(x => x.FirstName == request.AccountHolderName && 
-                                                                            x.LastName == request.AccountHolderSurname);
+            var userEntity = await _context.Users.SingleOrDefaultAsync(x => x.FirstName == request.FirstName && 
+                                                                            x.LastName == request.LastName);
             if(userEntity == null)
             {
-                throw new NotFoundException(nameof(User), $"{request.AccountHolderName} {request.AccountHolderSurname}");
+                await _bankingService.CreateUser(request.FirstName, request.LastName, cancellationToken);
+                userEntity = await _context.Users.SingleOrDefaultAsync(x => x.FirstName == request.FirstName &&
+                                                                            x.LastName == request.LastName);
             }
 
             await _bankingService.CreateAccount(accountNumber, userEntity, request.InitialDeposit, cancellationToken);
 
-            return Unit.Value;
+            return new CreateAccountViewModel
+            {
+                AccountNumber = accountNumber,
+                AccountBalance = request.InitialDeposit
+            };
         }
 
         private async Task<string> GenerateAccountNumber()
@@ -61,7 +65,6 @@ namespace BasicBanking.Application.Banking.Commands.CreateAccount
                 }
             }
             
-
             return accountNumber;   
         }
 

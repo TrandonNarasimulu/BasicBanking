@@ -11,7 +11,7 @@ namespace BasicBanking.Infrastructure.Persistence
             var user3 = new User { Id = 3, FirstName = "Rhonda", LastName = "Church" };
             var user4 = new User { Id = 4, FirstName = "Georgina", LastName = "Hazel" };
 
-            var bankAccount1 = new BankAccount { Id = 1, UserId = user1.Id, User = user1, Balance = 10.00 };
+            var bankAccount1 = new BankAccount { Id = 1, UserId = user1.Id, User = user1, Balance = 10.00, AccountNumber = "1235467891" };
             
             context.Users.Add(user1);
             context.Users.Add(user2);
