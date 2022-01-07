@@ -22,6 +22,7 @@ namespace BasicBanking.API
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddScoped<ApiExceptionFilterAttribute>();
             services.AddCors(options => options.AddPolicy("CorsPolicy",
                         builder =>
                         {
@@ -59,7 +60,8 @@ namespace BasicBanking.API
             app.UseRouting();
             app.UseAuthorization();
 
-            var context = app.ApplicationServices.GetRequiredService<BasicBankingDbContext>();
+            var scope = app.ApplicationServices.CreateScope();
+            var context = scope.ServiceProvider.GetService<BasicBankingDbContext>();
             BasicBankingDbContextSeedData.SeedSampleDataAsync(context);
 
             app.UseEndpoints(endpoints =>
@@ -72,7 +74,6 @@ namespace BasicBanking.API
 
         public void SetMvcOptions(MvcOptions options)
         {
-            options.Filters.Add(new ApiExceptionFilterAttribute());
         }
     }
 }

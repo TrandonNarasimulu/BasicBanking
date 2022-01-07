@@ -1,10 +1,12 @@
-﻿using MediatR;
+﻿using BasicBanking.API.Filters;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BasicBanking.API.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/[controller]/[action]")]
+    [ServiceFilter(typeof(ApiExceptionFilterAttribute))]
     [ApiController]
     public class ApiController : ControllerBase
     {

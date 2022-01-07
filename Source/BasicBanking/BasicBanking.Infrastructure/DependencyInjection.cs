@@ -17,7 +17,7 @@ namespace BasicBanking.Infrastructure
             string dbName = configuration.GetValue<string>("Infrastructure:DatabaseName");
             services.AddDbContext<BasicBankingDbContext>(options => options.UseInMemoryDatabase(dbName));
 
-            services.AddSingleton<IBasicBankingDbContext>(provider => provider.GetService<BasicBankingDbContext>());
+            services.AddScoped<IBasicBankingDbContext>(provider => provider.GetService<BasicBankingDbContext>());
 
             return services;
         }
