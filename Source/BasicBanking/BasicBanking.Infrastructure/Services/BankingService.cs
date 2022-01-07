@@ -1,9 +1,8 @@
 ﻿using BasicBanking.Application.Common.Interfaces;
 using BasicBanking.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
-using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,17 +17,25 @@ namespace BasicBanking.Infrastructure.Services
             _context = context;
         }
 
-        public async Task CreateUser(string firstName, string lastName, CancellationToken cancellationToken)
+        public async Task CreateUser(string firstName, string lastName, string idNumber, CancellationToken cancellationToken)
         {
             var user = new User
             {
                 FirstName = firstName,
                 LastName = lastName,
+                IDNumber = idNumber
             };
 
             _context.Users.Add(user);
 
             await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<bool> AccountNumberExists(string accountNumber)
+        {
+            var entity = await _context.BankAccounts.SingleOrDefaultAsync(x => x.AccountNumber == accountNumber);
+
+            return entity != null;
         }
 
         public async Task CreateAccount(string accountNumber, User user, double initialDeposit, CancellationToken cancellationToken)
@@ -44,6 +51,34 @@ namespace BasicBanking.Infrastructure.Services
             _context.BankAccounts.Add(bankAccount);
 
             await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task<User> GetUserDetails(string idNumber)
+        {
+            var userEntity = await _context.Users.SingleOrDefaultAsync(x => x.IDNumber == idNumber);
+
+            return userEntity;
+        }
+
+        public async Task<User> GetUserDetails(long userId)
+        {
+            var userEntity = await _context.Users.SingleOrDefaultAsync(x => x.Id == userId);
+
+            return userEntity;
+        }
+
+        public async Task<BankAccount> GetBankAccountDetails(string accountNumber)
+        {
+            var bankAccount = await _context.BankAccounts.SingleOrDefaultAsync(x => x.AccountNumber == accountNumber);
+
+            return bankAccount;
+        }
+
+        public List<BankAccount> GetAllUserBankAccounts(string idNumber)
+        {
+            var bankAccount = _context.BankAccounts.Where(x => x.User.IDNumber == idNumber).ToList();
+
+            return bankAccount;
         }
 
         public async Task TransferMoney(string srcAccount, string destAccount, double amount, CancellationToken cancellationToken)

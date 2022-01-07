@@ -2,10 +2,6 @@
 using BasicBanking.Application.Common.Interfaces;
 using BasicBanking.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,23 +14,23 @@ namespace BasicBanking.Application.Banking.Commands.AccountBalance
 
     public class AccountBalanceCommandHandler : IRequestHandler<AccountBalanceCommand, AccountBalanceViewModel>
     {
-        private readonly IBasicBankingDbContext _context;
+        private readonly IBanking _bankingService;
 
-        public AccountBalanceCommandHandler(IBasicBankingDbContext context)
+        public AccountBalanceCommandHandler(IBanking bankingService)
         {
-            _context = context;
+            _bankingService = bankingService;
         }
 
         public async Task<AccountBalanceViewModel> Handle(AccountBalanceCommand request, CancellationToken cancellationToken)
         {
-            var bankAccount = await _context.BankAccounts.SingleOrDefaultAsync(x => x.AccountNumber == request.AccountNumber);
-            if(bankAccount == null)
+            var bankAccount = await _bankingService.GetBankAccountDetails(request.AccountNumber);
+            if (bankAccount == null)
             {
                 throw new NotFoundException(nameof(BankAccount), request.AccountNumber);
             }
 
-            var userEntity = await _context.Users.SingleOrDefaultAsync(x => x.Id  == bankAccount.UserId);
-            if (userEntity == null)
+            var userDetails = await _bankingService.GetUserDetails(bankAccount.UserId);
+            if (userDetails == null)
             {
                 throw new NotFoundException(nameof(User), $"UserID = '{bankAccount.UserId}'");
             }
@@ -43,8 +39,9 @@ namespace BasicBanking.Application.Banking.Commands.AccountBalance
             {
                 AccountBalance = bankAccount.Balance,
                 AccountNumber = bankAccount.AccountNumber,
-                AccountHolderFirstName = userEntity.FirstName,
-                AccountHolderLastName = userEntity.LastName
+                AccountHolderFirstName = userDetails.FirstName,
+                AccountHolderLastName = userDetails.LastName,
+                AccountHolderIDNumber = userDetails.IDNumber
             };
         }
     }

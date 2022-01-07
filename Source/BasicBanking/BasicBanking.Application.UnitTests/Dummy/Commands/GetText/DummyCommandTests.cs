@@ -1,6 +1,4 @@
 ﻿using BasicBanking.Application.Common.Exceptions;
-using BasicBanking.Application.Common.Interfaces;
-using BasicBanking.Application.Dummy.Commands.GetText;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Shouldly;

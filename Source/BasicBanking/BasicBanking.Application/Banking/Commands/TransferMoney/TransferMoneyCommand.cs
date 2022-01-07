@@ -2,8 +2,6 @@
 using BasicBanking.Application.Common.Interfaces;
 using BasicBanking.Domain.Entities;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,18 +16,16 @@ namespace BasicBanking.Application.Banking.Commands.TransferMoney
 
     public class TransferMoneyCommandHandler : IRequestHandler<TransferMoneyCommand, Unit>
     {
-        private readonly IBasicBankingDbContext _context;
         private readonly IBanking _bankingService;
 
-        public TransferMoneyCommandHandler(IBasicBankingDbContext context, IBanking bankingService)
+        public TransferMoneyCommandHandler(IBanking bankingService)
         {
-            _context = context;
             _bankingService = bankingService;
         }
 
         public async Task<Unit> Handle(TransferMoneyCommand request, CancellationToken cancellationToken)
         {
-            var srcAccount = await _context.BankAccounts.SingleOrDefaultAsync(x => x.AccountNumber == request.SourceAccountNumber);
+            var srcAccount = await _bankingService.GetBankAccountDetails(request.SourceAccountNumber);
             if(srcAccount == null)
             {
                 throw new NotFoundException(nameof(BankAccount), request.SourceAccountNumber);
@@ -40,7 +36,7 @@ namespace BasicBanking.Application.Banking.Commands.TransferMoney
                 throw new InsufficientFundsException($"Insufficient funds to trasnfer in account '{request.SourceAccountNumber}'");
             }
 
-            var destAccount = await _context.BankAccounts.SingleOrDefaultAsync(x => x.AccountNumber == request.DestinationAccountNumber);
+            var destAccount = await _bankingService.GetBankAccountDetails(request.DestinationAccountNumber);
             if (destAccount == null)
             {
                 throw new NotFoundException(nameof(BankAccount), request.DestinationAccountNumber);

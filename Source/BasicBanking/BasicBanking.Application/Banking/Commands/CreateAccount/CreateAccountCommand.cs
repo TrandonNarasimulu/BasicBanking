@@ -1,10 +1,5 @@
-﻿using BasicBanking.Application.Common.Exceptions;
-using BasicBanking.Application.Common.Interfaces;
-using BasicBanking.Domain.Entities;
+﻿using BasicBanking.Application.Common.Interfaces;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
-using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -14,19 +9,18 @@ namespace BasicBanking.Application.Banking.Commands.CreateAccount
     {
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string IDNumber { get; set; }
         public double InitialDeposit { get; set; }
     }
 
     public class CreateAccountCommandHandler : IRequestHandler<CreateAccountCommand, CreateAccountViewModel>
     {
         private readonly IBanking _bankingService;
-        private readonly IBasicBankingDbContext _context;
         private readonly IMath _mathService;
 
-        public CreateAccountCommandHandler(IBanking bankingService, IBasicBankingDbContext context, IMath mathService)
+        public CreateAccountCommandHandler(IBanking bankingService, IMath mathService)
         {
             _bankingService = bankingService;
-            _context = context;
             _mathService = mathService;
         }
 
@@ -34,13 +28,11 @@ namespace BasicBanking.Application.Banking.Commands.CreateAccount
         {
             var accountNumber = await GenerateAccountNumber();
 
-            var userEntity = await _context.Users.SingleOrDefaultAsync(x => x.FirstName == request.FirstName && 
-                                                                            x.LastName == request.LastName);
+            var userEntity = await _bankingService.GetUserDetails(request.IDNumber);
             if(userEntity == null)
             {
-                await _bankingService.CreateUser(request.FirstName, request.LastName, cancellationToken);
-                userEntity = await _context.Users.SingleOrDefaultAsync(x => x.FirstName == request.FirstName &&
-                                                                            x.LastName == request.LastName);
+                await _bankingService.CreateUser(request.FirstName, request.LastName, request.IDNumber, cancellationToken);
+                userEntity = await _bankingService.GetUserDetails(request.IDNumber);
             }
 
             await _bankingService.CreateAccount(accountNumber, userEntity, request.InitialDeposit, cancellationToken);
@@ -56,7 +48,7 @@ namespace BasicBanking.Application.Banking.Commands.CreateAccount
         {
             string accountNumber = "";
 
-            while (string.IsNullOrEmpty(accountNumber) || await AccountNumberExists(accountNumber))
+            while (string.IsNullOrEmpty(accountNumber) || await _bankingService.AccountNumberExists(accountNumber))
             {
                 accountNumber = "";
                 for (int i = 0; i < 10; i++)
@@ -65,14 +57,7 @@ namespace BasicBanking.Application.Banking.Commands.CreateAccount
                 }
             }
             
-            return accountNumber;   
-        }
-
-        private async Task<bool> AccountNumberExists(string accountNumber)
-        {
-            var entity = await _context.BankAccounts.SingleOrDefaultAsync(x => x.AccountNumber == accountNumber);
-
-            return entity != null;
+            return accountNumber;
         }
     }
 }

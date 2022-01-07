@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace BasicBanking.Application.Banking.Commands.CreateAccount
+﻿namespace BasicBanking.Application.Banking.Commands.CreateAccount
 {
     public class CreateAccountViewModel
     {
