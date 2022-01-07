@@ -13,6 +13,7 @@ namespace BasicBanking.Infrastructure
         {
             services.AddTransient<IBanking, BankingService>();
             services.AddTransient<IDateTime, DateTimeService>();
+            services.AddTransient<IMath, MathService>();
 
             string dbName = configuration.GetValue<string>("Infrastructure:DatabaseName");
             services.AddDbContext<BasicBankingDbContext>(options => options.UseInMemoryDatabase(dbName));

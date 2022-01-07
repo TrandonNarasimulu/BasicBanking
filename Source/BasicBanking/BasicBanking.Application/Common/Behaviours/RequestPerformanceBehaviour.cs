@@ -27,9 +27,14 @@ namespace BasicBanking.Application.Common.Behaviours
             _timer.Stop();
 
             var elapsedMilliseconds = _timer.ElapsedMilliseconds;
-            var requestName = typeof(TRequest).Name;
+            
+            if(elapsedMilliseconds > 2000)
+            {
+                var requestName = typeof(TRequest).Name;
 
-            _logger.LogWarning("Service Request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}", requestName, elapsedMilliseconds, request);
+                _logger.LogWarning("Service Request: {Name} ({ElapsedMilliseconds} milliseconds) {@Request}", 
+                    requestName, elapsedMilliseconds, request);
+            }
 
             return response;
         }

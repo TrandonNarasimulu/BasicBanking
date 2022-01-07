@@ -7,7 +7,7 @@ namespace BasicBanking.Infrastructure.Persistence
         public static void SeedSampleDataAsync(BasicBankingDbContext context)
         {
             var user1 = new User { Id = 1, FirstName = "Arisha", LastName = "Barron" };
-            var user2 = new User { Id = 2, FirstName = "Brandon", LastName = "Gibson" };
+            var user2 = new User { Id = 2, FirstName = "Branden", LastName = "Gibson" };
             var user3 = new User { Id = 3, FirstName = "Rhonda", LastName = "Church" };
             var user4 = new User { Id = 4, FirstName = "Georgina", LastName = "Hazel" };
 
