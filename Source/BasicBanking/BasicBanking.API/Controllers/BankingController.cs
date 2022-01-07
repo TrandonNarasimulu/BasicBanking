@@ -1,10 +1,11 @@
-﻿using BasicBanking.Application.Banking.Commands.AccountBalance;
-using BasicBanking.Application.Banking.Commands.BalanceByIDNumber;
+﻿using BasicBanking.Application.Banking.Queires.GetAccountBalance;
+using BasicBanking.Application.Banking.Queires.GetBalanceByIDNumber;
 using BasicBanking.Application.Banking.Commands.CreateAccount;
 using BasicBanking.Application.Banking.Commands.TransferMoney;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using BasicBanking.Application.Banking.Queires.GetTransferHistory;
 
 namespace BasicBanking.API.Controllers
 {
@@ -33,7 +34,7 @@ namespace BasicBanking.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AccountBalanceViewModel>> BalanceByAccountNumber(string accountNumber)
         {
-            return Ok(await Mediator.Send(new AccountBalanceCommand { AccountNumber = accountNumber }));
+            return Ok(await Mediator.Send(new AccountBalanceQuery { AccountNumber = accountNumber }));
         }
 
         [HttpGet("{idNumber}")]
@@ -41,7 +42,15 @@ namespace BasicBanking.API.Controllers
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<AccountBalanceViewModel>> BalanceByUserIDNumber(string idNumber)
         {
-            return Ok(await Mediator.Send(new BalanceByIDCommand { IDNumber = idNumber }));
+            return Ok(await Mediator.Send(new BalanceByIDQuery { IDNumber = idNumber }));
+        }
+
+        [HttpGet("{accountNumber}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<TransferHistoryViewModel>> GetTransferHistory(string accountNumber)
+        {
+            return Ok(await Mediator.Send(new TransferHistoryQuery { AccountNumber = accountNumber }));
         }
     }
 }

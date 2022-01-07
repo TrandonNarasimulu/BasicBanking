@@ -1,4 +1,5 @@
-﻿using BasicBanking.Application.Common.Exceptions;
+﻿using BasicBanking.Application.Common.Enumerations;
+using BasicBanking.Application.Common.Exceptions;
 using BasicBanking.Application.Common.Interfaces;
 using BasicBanking.Domain.Entities;
 using MediatR;
@@ -42,7 +43,13 @@ namespace BasicBanking.Application.Banking.Commands.TransferMoney
                 throw new NotFoundException(nameof(BankAccount), request.DestinationAccountNumber);
             }
 
-             await _bankingService.TransferMoney(srcAccount.AccountNumber, destAccount.AccountNumber, request.Amount, cancellationToken);
+            await _bankingService.TransferMoney(srcAccount.AccountNumber, destAccount.AccountNumber, request.Amount, cancellationToken);
+
+            await _bankingService.UpdateTransferHistory(srcAccount.AccountNumber, TransactionDetails.Money_Out.ToString(), 
+                request.Amount, cancellationToken);
+            
+            await _bankingService.UpdateTransferHistory(destAccount.AccountNumber, TransactionDetails.Money_In.ToString(), 
+                request.Amount, cancellationToken);
 
             return Unit.Value;
         }

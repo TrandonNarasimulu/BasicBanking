@@ -9,6 +9,7 @@ namespace BasicBanking.Application.Common.Interfaces
     {
         public DbSet<User> Users { get; set; }
         public DbSet<BankAccount> BankAccounts { get; set; }
+        public DbSet<Transaction> TransferHistory { get; set; }
 
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }

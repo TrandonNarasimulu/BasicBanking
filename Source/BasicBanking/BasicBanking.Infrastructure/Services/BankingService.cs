@@ -76,9 +76,7 @@ namespace BasicBanking.Infrastructure.Services
 
         public List<BankAccount> GetAllUserBankAccounts(string idNumber)
         {
-            var bankAccount = _context.BankAccounts.Where(x => x.User.IDNumber == idNumber).ToList();
-
-            return bankAccount;
+            return _context.BankAccounts.Where(x => x.User.IDNumber == idNumber).ToList();
         }
 
         public async Task TransferMoney(string srcAccount, string destAccount, double amount, CancellationToken cancellationToken)
@@ -93,6 +91,25 @@ namespace BasicBanking.Infrastructure.Services
             _context.BankAccounts.Update(destBankAccount);
 
             await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public async Task UpdateTransferHistory(string accountNumber, string transactionDetails, double amount, CancellationToken cancellationToken)
+        {
+            var transaction = new Transaction
+            {
+                AccountNumber = accountNumber,
+                TransactionDetails = transactionDetails,
+                Amount = amount
+            };
+
+            _context.TransferHistory.Add(transaction);
+
+            await _context.SaveChangesAsync(cancellationToken);
+        }
+
+        public List<Transaction> GetTransferHistory(string accountNumber)
+        {
+            return _context.TransferHistory.Where(x => x.AccountNumber == accountNumber).ToList();
         }
     }
 }

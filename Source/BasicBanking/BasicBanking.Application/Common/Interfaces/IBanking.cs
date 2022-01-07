@@ -15,5 +15,7 @@ namespace BasicBanking.Application.Common.Interfaces
         Task<BankAccount> GetBankAccountDetails(string accountNumber);
         List<BankAccount> GetAllUserBankAccounts(string idNumber);
         Task TransferMoney(string srcAccount, string destAccount, double amount, CancellationToken cancellationToken);
+        Task UpdateTransferHistory(string accountNumber, string transactionDetails, double amount, CancellationToken cancellationToken);
+        List<Transaction> GetTransferHistory(string accountNumber);
     }
 }

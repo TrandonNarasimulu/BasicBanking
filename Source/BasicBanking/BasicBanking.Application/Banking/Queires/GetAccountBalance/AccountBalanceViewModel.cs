@@ -1,13 +1,6 @@
-﻿using System.Collections.Generic;
-
-namespace BasicBanking.Application.Banking.Commands.BalanceByIDNumber
+﻿namespace BasicBanking.Application.Banking.Queires.GetAccountBalance
 {
-    public class BalanceByIDViewModel
-    {
-        public List<AccountDetailsModel> accountDetails { get; set; }
-    }
-
-    public class AccountDetailsModel
+    public class AccountBalanceViewModel
     {
         public string AccountNumber { get; set; }
         public double AccountBalance { get; set; }

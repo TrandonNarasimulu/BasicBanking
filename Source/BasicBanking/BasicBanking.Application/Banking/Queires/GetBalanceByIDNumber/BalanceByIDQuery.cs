@@ -6,23 +6,23 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BasicBanking.Application.Banking.Commands.BalanceByIDNumber
+namespace BasicBanking.Application.Banking.Queires.GetBalanceByIDNumber
 {
-    public class BalanceByIDCommand : IRequest<BalanceByIDViewModel>
+    public class BalanceByIDQuery : IRequest<BalanceByIDViewModel>
     {
         public string IDNumber { get; set; }
     }
 
-    public class BalanceByIDCommandHandler : IRequestHandler<BalanceByIDCommand, BalanceByIDViewModel>
+    public class BalanceByIDQueryHandler : IRequestHandler<BalanceByIDQuery, BalanceByIDViewModel>
     {
         private readonly IBanking _bankingService;
 
-        public BalanceByIDCommandHandler(IBanking bankingService)
+        public BalanceByIDQueryHandler(IBanking bankingService)
         {
             _bankingService = bankingService;
         }
 
-        public async Task<BalanceByIDViewModel> Handle(BalanceByIDCommand request, CancellationToken cancellationToken)
+        public async Task<BalanceByIDViewModel> Handle(BalanceByIDQuery request, CancellationToken cancellationToken)
         {
             List<AccountDetailsModel> allAccounts = new List<AccountDetailsModel>();
 
@@ -35,7 +35,7 @@ namespace BasicBanking.Application.Banking.Commands.BalanceByIDNumber
             var bankAccounts = _bankingService.GetAllUserBankAccounts(request.IDNumber);
             if (bankAccounts == null)
             {
-                return new BalanceByIDViewModel { accountDetails = allAccounts };
+                return new BalanceByIDViewModel { AccountDetails = allAccounts };
             }
 
             foreach(var bankAccount in bankAccounts)
@@ -52,7 +52,7 @@ namespace BasicBanking.Application.Banking.Commands.BalanceByIDNumber
                 allAccounts.Add(accountDetailsModel);
             }
 
-            return new BalanceByIDViewModel { accountDetails = allAccounts };
+            return new BalanceByIDViewModel { AccountDetails = allAccounts };
         }
     }
 }

@@ -5,23 +5,23 @@ using MediatR;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace BasicBanking.Application.Banking.Commands.AccountBalance
+namespace BasicBanking.Application.Banking.Queires.GetAccountBalance
 {
-    public class AccountBalanceCommand : IRequest<AccountBalanceViewModel>
+    public class AccountBalanceQuery : IRequest<AccountBalanceViewModel>
     {
         public string AccountNumber { get; set; }
     }
 
-    public class AccountBalanceCommandHandler : IRequestHandler<AccountBalanceCommand, AccountBalanceViewModel>
+    public class AccountBalanceQueryHandler : IRequestHandler<AccountBalanceQuery, AccountBalanceViewModel>
     {
         private readonly IBanking _bankingService;
 
-        public AccountBalanceCommandHandler(IBanking bankingService)
+        public AccountBalanceQueryHandler(IBanking bankingService)
         {
             _bankingService = bankingService;
         }
 
-        public async Task<AccountBalanceViewModel> Handle(AccountBalanceCommand request, CancellationToken cancellationToken)
+        public async Task<AccountBalanceViewModel> Handle(AccountBalanceQuery request, CancellationToken cancellationToken)
         {
             var bankAccount = await _bankingService.GetBankAccountDetails(request.AccountNumber);
             if (bankAccount == null)
