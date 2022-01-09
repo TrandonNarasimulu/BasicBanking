@@ -1,5 +1,6 @@
 ﻿using BasicBanking.Application.Common.Enumerations;
 using BasicBanking.Application.Common.Exceptions;
+using BasicBanking.Application.Common.Extensions;
 using BasicBanking.Application.Common.Interfaces;
 using BasicBanking.Domain.Entities;
 using MediatR;
@@ -45,10 +46,10 @@ namespace BasicBanking.Application.Banking.Commands.TransferMoney
 
             await _bankingService.TransferMoney(srcAccount.AccountNumber, destAccount.AccountNumber, request.Amount, cancellationToken);
 
-            await _bankingService.UpdateTransferHistory(srcAccount.AccountNumber, TransactionDetails.Money_Out.ToString(), 
+            await _bankingService.UpdateTransferHistory(srcAccount.AccountNumber, destAccount.AccountNumber, TransactionDetails.Money_Out.GetDescription(), 
                 request.Amount, cancellationToken);
             
-            await _bankingService.UpdateTransferHistory(destAccount.AccountNumber, TransactionDetails.Money_In.ToString(), 
+            await _bankingService.UpdateTransferHistory(destAccount.AccountNumber, srcAccount.AccountNumber, TransactionDetails.Money_In.GetDescription(), 
                 request.Amount, cancellationToken);
 
             return Unit.Value;

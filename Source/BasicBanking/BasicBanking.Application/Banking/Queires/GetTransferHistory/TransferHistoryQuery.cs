@@ -42,7 +42,9 @@ namespace BasicBanking.Application.Banking.Queires.GetTransferHistory
                 var transferHistoryItem = new TransferHistoryItem
                 {
                     Amount = transaction.Amount,
-                    TransactionDetails = transaction.TransactionDetails
+                    TransactionDetails = transaction.TransactionDetails,
+                    MainAccountNumber = transaction.MainAccountNumber,
+                    OtherAccountNumber = transaction.OtherAccountNumber
                 };
 
                 transferHistory.Add(transferHistoryItem);

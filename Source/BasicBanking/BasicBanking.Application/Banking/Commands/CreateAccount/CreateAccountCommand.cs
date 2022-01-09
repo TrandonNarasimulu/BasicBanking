@@ -1,4 +1,5 @@
 ﻿using BasicBanking.Application.Common.Enumerations;
+using BasicBanking.Application.Common.Extensions;
 using BasicBanking.Application.Common.Interfaces;
 using MediatR;
 using System.Threading;
@@ -38,7 +39,7 @@ namespace BasicBanking.Application.Banking.Commands.CreateAccount
 
             await _bankingService.CreateAccount(accountNumber, userEntity, request.InitialDeposit, cancellationToken);
 
-            await _bankingService.UpdateTransferHistory(accountNumber, TransactionDetails.Deposit.ToString(), 
+            await _bankingService.UpdateTransferHistory(accountNumber, "N/A", TransactionDetails.Deposit.GetDescription(), 
                 request.InitialDeposit, cancellationToken);
 
             return new CreateAccountViewModel

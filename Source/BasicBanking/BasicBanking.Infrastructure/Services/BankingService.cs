@@ -93,11 +93,12 @@ namespace BasicBanking.Infrastructure.Services
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task UpdateTransferHistory(string accountNumber, string transactionDetails, double amount, CancellationToken cancellationToken)
+        public async Task UpdateTransferHistory(string mainAccountNumber, string otherAccountNumber, string transactionDetails, double amount, CancellationToken cancellationToken)
         {
             var transaction = new Transaction
             {
-                AccountNumber = accountNumber,
+                MainAccountNumber = mainAccountNumber,
+                OtherAccountNumber = otherAccountNumber,
                 TransactionDetails = transactionDetails,
                 Amount = amount
             };
@@ -109,7 +110,7 @@ namespace BasicBanking.Infrastructure.Services
 
         public List<Transaction> GetTransferHistory(string accountNumber)
         {
-            return _context.TransferHistory.Where(x => x.AccountNumber == accountNumber).ToList();
+            return _context.TransferHistory.Where(x => x.MainAccountNumber == accountNumber).ToList();
         }
     }
 }

@@ -11,5 +11,7 @@ namespace BasicBanking.Application.Banking.Queires.GetTransferHistory
     {
         public string TransactionDetails { get; set; }
         public double Amount { get; set; }
+        public string MainAccountNumber { get; set; }
+        public string OtherAccountNumber { get; set; }
     }
 }
