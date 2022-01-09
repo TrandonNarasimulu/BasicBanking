@@ -12,6 +12,7 @@ namespace BasicBanking.Infrastructure.Persistence
             var user4 = new User { Id = 4, FirstName = "Georgina", LastName = "Hazel", IDNumber = "9865234587523" };
 
             var bankAccount1 = new BankAccount { Id = 1, UserId = user1.Id, User = user1, Balance = 100.00, AccountNumber = "1235467891" };
+            var bankAccount2 = new BankAccount { Id = 2, UserId = user4.Id, User = user4, Balance = 100.00, AccountNumber = "9876543219" };
 
             var transaction = new Transaction { Id = 1, MainAccountNumber = "1235467891", OtherAccountNumber = "N/A", TransactionDetails = "Deposit", Amount = 100.00 };
             
@@ -21,6 +22,7 @@ namespace BasicBanking.Infrastructure.Persistence
             context.Users.Add(user4);
 
             context.BankAccounts.Add(bankAccount1);
+            context.BankAccounts.Add(bankAccount2);
 
             context.TransferHistory.Add(transaction);
 

@@ -22,10 +22,10 @@ namespace BasicBanking.Application.Banking.Queires.GetTransferHistory
             _bankingService = bankingService;
         }
 
-        public Task<TransferHistoryViewModel> Handle(TransferHistoryQuery request, CancellationToken cancellationToken)
+        public async Task<TransferHistoryViewModel> Handle(TransferHistoryQuery request, CancellationToken cancellationToken)
         {
             List<TransferHistoryItem> transferHistory = new List<TransferHistoryItem>();
-            var bankAccount = _bankingService.GetBankAccountDetails(request.AccountNumber);
+            var bankAccount = await _bankingService.GetBankAccountDetails(request.AccountNumber);
             if(bankAccount == null)
             {
                 throw new NotFoundException(nameof(BankAccount), request.AccountNumber);
@@ -34,7 +34,7 @@ namespace BasicBanking.Application.Banking.Queires.GetTransferHistory
             var transactions = _bankingService.GetTransferHistory(request.AccountNumber);
             if(transactions == null)
             {
-                return Task.FromResult(new TransferHistoryViewModel { TransferHistory = transferHistory });
+                return new TransferHistoryViewModel { TransferHistory = transferHistory };
             }
 
             foreach(var transaction in transactions)
@@ -50,7 +50,7 @@ namespace BasicBanking.Application.Banking.Queires.GetTransferHistory
                 transferHistory.Add(transferHistoryItem);
             }
 
-            return Task.FromResult(new TransferHistoryViewModel { TransferHistory = transferHistory });
+            return new TransferHistoryViewModel { TransferHistory = transferHistory };
         }
     }
 }

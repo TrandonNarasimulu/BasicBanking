@@ -6,7 +6,10 @@ namespace BasicBanking.Application.Banking.Queires.GetBalanceByIDNumber
     {
         public BalanceByIDQueryValidator()
         {
-            RuleFor(x => x.IDNumber).NotEmpty().Must(x => x.Length == 13);
+            RuleFor(x => x.IDNumber).NotEmpty();
+            When(x => x.IDNumber != null, () => {
+                RuleFor(x => x.IDNumber).Must(x => x.Length == 13);
+            });
         }
     }
 }

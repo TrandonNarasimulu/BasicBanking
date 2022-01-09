@@ -40,7 +40,7 @@ namespace BasicBanking.API.Controllers
         [HttpGet("{idNumber}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<AccountBalanceViewModel>> BalanceByUserIDNumber(string idNumber)
+        public async Task<ActionResult<BalanceByIDViewModel>> BalanceByUserIDNumber(string idNumber)
         {
             return Ok(await Mediator.Send(new BalanceByIDQuery { IDNumber = idNumber }));
         }

@@ -17,7 +17,7 @@ namespace BasicBanking.API.IntegrationTests.Controllers.HealthCheckController
         {
             var client = _factory.CreateClient();
 
-            var response = await client.GetAsync($"/api/HealthCheck");
+            var response = await client.GetAsync($"/api/HealthCheck/IsAlive");
 
             response.EnsureSuccessStatusCode();
         }
