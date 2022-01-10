@@ -22,6 +22,7 @@ namespace BasicBanking.API.IntegrationTests.Controllers.BankingController
             _factory = factory;
         }
 
+        // Take note that these tests might need to be run on its own. If it fails you can run it again on its own.
         [Fact]
         public async Task TestCreateAccount_ShouldSucceedAsync()
         {

@@ -76,4 +76,5 @@ which will provide the full documentation on how to access and use the API.
     an endpoint. XUnit is used to label any test methods as well as to Assert any values. Moq is used to mock the Infrastructure services, so that you can specify what kind of result
     it should return. You can also verify how many times a method should be called using Moq. For more infomation on XUnit you can go here "https://xunit.net/". For more information 
     on Moq you can go here "https://github.com/moq/moq4". All the unit tests are arranged using the Arrange Act Assert pattern. You can read up more about this pattern
-    here "https://docs.telerik.com/devtools/justmock/basic-usage/arrange-act-assert".
+    here "https://docs.telerik.com/devtools/justmock/basic-usage/arrange-act-assert". All unit tests can be run directly from Visual Studio. If any integration tests fail, you can try 
+    rerun them on their own.

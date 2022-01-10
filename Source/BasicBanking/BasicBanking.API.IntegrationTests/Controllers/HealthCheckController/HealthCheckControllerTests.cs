@@ -12,6 +12,7 @@ namespace BasicBanking.API.IntegrationTests.Controllers.HealthCheckController
             _factory = factory;
         }
 
+        // Take note that this test might need to be run on its own. If it fails you can run it again on its own.
         [Fact]
         public async Task TestHealthCheckControllerWithStartup_ShouldSucceedAsync()
         {
